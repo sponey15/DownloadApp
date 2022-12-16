@@ -49,7 +49,7 @@ namespace ApplicationCore.Services
             {
                 authTokenDto = _mapper.Map(await _assecoPortalClient.DownloadTokenAsync(), authTokenDto);
                 
-                if (authTokenDto == null) return null;
+                if (authTokenDto == null || authTokenDto.AccessToken == null || authTokenDto.ExpirationTime == null) return null;
             }
 
             return authTokenDto;
