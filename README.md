@@ -11,9 +11,9 @@ You can use IIS server provided with VisualStudio 2022
 Or you can choose to use commands:
 dotnet restore -> to install dependencies
 dotnet watch run -> run api server
-
+```
 Please remember to double check address of localhost and make changes in client [download.service.ts](https://github.com/sponey15/DownloadApp/blob/main/client/src/app/_services/download.service.ts#L10) file
-
+```bash
 In Client folder:
 npm update -> installs all dependencies used at project
 ng serve -> run angular
