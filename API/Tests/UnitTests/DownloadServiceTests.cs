@@ -4,6 +4,7 @@ using ApplicationCore.Services;
 using AutoMapper;
 using Infrastructure.Entities;
 using Infrastructure.Interfaces;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace UnitTests
@@ -27,6 +28,7 @@ namespace UnitTests
             var mapper = mockMapper.CreateMapper();
 
             var assecoPortalClient = Mock.Of<IAssecoPortalClient>();
+            var logger = Mock.Of<ILogger<DownloadService>>();
 
             Mock.Get(assecoPortalClient).Setup(x => x.DownloadTokenAsync())
                                         .ReturnsAsync(authToken);
@@ -34,7 +36,7 @@ namespace UnitTests
             Mock.Get(assecoPortalClient).Setup(x => x.DownloadFileAsync(It.IsAny<string>()))
                                         .ReturnsAsync(testFile);
             //Act
-            DownloadService downloadService = new DownloadService(mapper, assecoPortalClient);
+            var downloadService = new DownloadService(mapper, assecoPortalClient, logger);
             var result = await downloadService.GetResourcesListAsync(authTokenDto);
 
             //Assert
@@ -55,6 +57,7 @@ namespace UnitTests
             var mapper = mockMapper.CreateMapper();
 
             var assecoPortalClient = Mock.Of<IAssecoPortalClient>();
+            var logger = Mock.Of<ILogger<DownloadService>>();
 
             Mock.Get(assecoPortalClient).Setup(x => x.DownloadTokenAsync())
                                         .ReturnsAsync((AuthToken)null);
@@ -62,7 +65,7 @@ namespace UnitTests
             Mock.Get(assecoPortalClient).Setup(x => x.DownloadFileAsync(It.IsAny<string>()))
                                         .ReturnsAsync((string)null);
             //Act
-            DownloadService downloadService = new DownloadService(mapper, assecoPortalClient);
+            var downloadService = new DownloadService(mapper, assecoPortalClient, logger);
             var result = await downloadService.GetResourcesListAsync(authTokenDto);
 
             //Assert
@@ -85,6 +88,7 @@ namespace UnitTests
             var mapper = mockMapper.CreateMapper();
 
             var assecoPortalClient = Mock.Of<IAssecoPortalClient>();
+            var logger = Mock.Of<ILogger<DownloadService>>();
 
             Mock.Get(assecoPortalClient).Setup(x => x.DownloadTokenAsync())
                                         .ReturnsAsync(authToken);
@@ -92,7 +96,7 @@ namespace UnitTests
             Mock.Get(assecoPortalClient).Setup(x => x.DownloadFileAsync(It.IsAny<string>()))
                                         .ReturnsAsync((string)null);
             //Act
-            DownloadService downloadService = new DownloadService(mapper, assecoPortalClient);
+            var downloadService = new DownloadService(mapper, assecoPortalClient, logger);
             var result = await downloadService.GetResourcesListAsync(authTokenDto);
 
             //Assert

@@ -1,6 +1,7 @@
 using AutoMapper;
 using Infrastructure;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace IntegrationTests
@@ -12,6 +13,7 @@ namespace IntegrationTests
         {
             //Arange
             var config = Mock.Of<IConfiguration>();
+            var logger = Mock.Of<ILogger<AssecoPortalClient>>();
 
             Mock.Get(config).Setup(x => x["OauthClientUtl"])
                 .Returns("https://oauth2.assecobs.pl/api/oauth2/token");
@@ -23,7 +25,7 @@ namespace IntegrationTests
                 .Returns("https://portalcloudapi-test.assecobs.pl/?DBC=rest&wadl");
 
             //Act
-            var assecoPortalClient = new AssecoPortalClient(config);
+            var assecoPortalClient = new AssecoPortalClient(config, logger);
 
             var result = await assecoPortalClient.DownloadTokenAsync();
 
@@ -36,6 +38,7 @@ namespace IntegrationTests
         {
             //Arange
             var config = Mock.Of<IConfiguration>();
+            var logger = Mock.Of<ILogger<AssecoPortalClient>>();
 
             Mock.Get(config).Setup(x => x["OauthClientUtl"])
                 .Returns("https://oauth2.assecobs.pl/api/oauth2/token");
@@ -47,7 +50,7 @@ namespace IntegrationTests
                 .Returns("https://portalcloudapi-test.assecobs.pl/?DBC=rest&wadl");
 
             //Act
-            var assecoPortalClient = new AssecoPortalClient(config);
+            var assecoPortalClient = new AssecoPortalClient(config, logger);
 
             var result = await assecoPortalClient.DownloadTokenAsync();
 
@@ -60,6 +63,7 @@ namespace IntegrationTests
         {
             //Arange
             var config = Mock.Of<IConfiguration>();
+            var logger = Mock.Of<ILogger<AssecoPortalClient>>();
 
             Mock.Get(config).Setup(x => x["OauthClientUtl"])
                 .Returns("https://oauth2.assecobs.pl/api/oauth2/token");
@@ -71,7 +75,7 @@ namespace IntegrationTests
                 .Returns("https://portalcloudapi-test.assecobs.pl/?DBC=rest&wadl");
 
             //Act
-            var assecoPortalClient = new AssecoPortalClient(config);
+            var assecoPortalClient = new AssecoPortalClient(config, logger);
 
             var token = await assecoPortalClient.DownloadTokenAsync();
             var result = await assecoPortalClient.DownloadFileAsync(token.AccessToken);
@@ -85,6 +89,7 @@ namespace IntegrationTests
         {
             //Arange
             var config = Mock.Of<IConfiguration>();
+            var logger = Mock.Of<ILogger<AssecoPortalClient>>();
 
             Mock.Get(config).Setup(x => x["OauthClientUtl"])
                 .Returns("https://oauth2.assecobs.pl/api/oauth2/token");
@@ -96,7 +101,7 @@ namespace IntegrationTests
                 .Returns("https://portalcloudapi-test.assecobs.pl/?DBC=rest&wadl");
 
             //Act
-            var assecoPortalClient = new AssecoPortalClient(config);
+            var assecoPortalClient = new AssecoPortalClient(config, logger);
 
             var result = await assecoPortalClient.DownloadFileAsync(string.Empty);
 

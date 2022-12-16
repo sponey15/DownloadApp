@@ -1,6 +1,7 @@
 ﻿using Infrastructure.Entities;
 using Infrastructure.Interfaces;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using RestSharp;
 using System.Net;
 using System.Net.Http.Headers;
@@ -14,13 +15,15 @@ namespace Infrastructure
         private readonly string _oauthUsername;
         private readonly string _oauthPassword;
         private readonly string _assecoPortalUrl;
- 
-        public AssecoPortalClient(IConfiguration config)
+        private readonly ILogger<AssecoPortalClient> _logger;
+
+        public AssecoPortalClient(IConfiguration config, ILogger<AssecoPortalClient> logger)
         {
             _oauthClientUtl = config["OauthClientUtl"];
             _oauthUsername = config["OauthUsername"];
             _oauthPassword = config["OauthPassword"];
             _assecoPortalUrl = config["AssecoPortalUrl"];
+            _logger = logger;
         }
 
         public async Task<AuthToken> DownloadTokenAsync()
@@ -56,7 +59,11 @@ namespace Infrastructure
             request.AddHeader("Cookie", "ROUTEID=.1");
 
             var response = client.Execute(request);
-            if (response.StatusCode != HttpStatusCode.OK || response.Content == null) return null;
+            if (response.StatusCode != HttpStatusCode.OK || response.Content == null) 
+            {
+                _logger.LogError($"There was error downloading file from external server.");
+                return null;
+            }
 
             return response.Content;
         }
@@ -76,7 +83,11 @@ namespace Infrastructure
 
             var response = client.Execute(request);
 
-            if (response.StatusCode != HttpStatusCode.OK || response.Content == null) return null;
+            if (response.StatusCode != HttpStatusCode.OK || response.Content == null)
+            {
+                _logger.LogError($"There was error downloading token from external server.");
+                return null;
+            }
 
             return response;
         }

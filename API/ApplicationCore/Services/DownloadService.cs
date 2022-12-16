@@ -3,6 +3,8 @@ using ApplicationCore.Services.Interfaces;
 using AutoMapper;
 using Infrastructure.Entities;
 using Infrastructure.Interfaces;
+using Microsoft.Extensions;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
@@ -19,10 +21,13 @@ namespace ApplicationCore.Services
     {
         private readonly IMapper _mapper;
         private readonly IAssecoPortalClient _assecoPortalClient;
-        public DownloadService(IMapper mapper, IAssecoPortalClient assecoPortalClient)
+        private readonly ILogger<DownloadService> _logger;
+
+        public DownloadService(IMapper mapper, IAssecoPortalClient assecoPortalClient, ILogger<DownloadService> logger)
         {
             _mapper = mapper;
             _assecoPortalClient = assecoPortalClient;
+            _logger = logger;
         }
 
         public async Task<ResourcePathsForReturnDto> GetResourcesListAsync(AuthTokenDto authTokenDto)
@@ -48,8 +53,12 @@ namespace ApplicationCore.Services
             if (authTokenDto.AccessToken == null || (authTokenDto.ExpirationTime == null || authTokenDto.ExpirationTime < DateTime.Now))
             {
                 authTokenDto = _mapper.Map(await _assecoPortalClient.DownloadTokenAsync(), authTokenDto);
-                
-                if (authTokenDto == null || authTokenDto.AccessToken == null || authTokenDto.ExpirationTime == null) return null;
+
+                if (authTokenDto == null || authTokenDto.AccessToken == null || authTokenDto.ExpirationTime == null)
+                {
+                    _logger.LogError($"Error occured while downloading token.");
+                    return null;
+                }
             }
 
             return authTokenDto;
